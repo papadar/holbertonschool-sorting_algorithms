@@ -19,53 +19,55 @@ void swap(int *a, int *b)
  * @size: size of the array
  * @low: low index
  * @high: high index
- * Return: size_t index value
+ * Return: index value
  */
 
-size_t partition(int *array, size_t size, size_t low, size_t high)
+int partition(int *array, size_t size, int low, int high)
 {
-	size_t i, j;
-	int pivot;
+	int pivot, i, j;
 
 	pivot = array[high];
-	if (low > 0)
-		i = (low - 1);
-	else
-		i = 0;
-
+	i = low - 1;
 	j = low;
 	while (j < high)
 	{
 		if (array[j] <= pivot)
 		{
 			i++;
-			swap(&array[i], &array[j]);
-			print_array(array, size);
+			if (i != j)
+			{
+				swap(&array[i], &array[j]);
+				print_array(array, size);
+			}
 		}
 		j++;
 	}
-	swap(&array[i + 1], &array[high]);
-	print_array(array, size);
+
+	if (array[i + 1] != array[high])
+	{
+		swap(&array[i + 1], &array[high]);
+		print_array(array, size);
+	}
 	return (i + 1);
 }
 
 /**
- * qk_sort - actual recursive sort algo
+ * quick_sort_actual - actual recursive sort algo
  * @array: sorting this array
  * @size: size of the array
  * @low: low index
  * @high: high index
  */
 
-void qk_sort(int *array, size_t size, size_t low, size_t high)
+void quick_sort_actual(int *array, size_t size, int low, int high)
 {
-	size_t pi;
+	int pi;
 
 	if (low < high)
 	{
 		pi = partition(array, size, low, high);
-		qk_sort(array, size, low, pi - 1);
-		qk_sort(array, size, pi + 1, high);
+		quick_sort_actual(array, size, low, pi - 1);
+		quick_sort_actual(array, size, pi + 1, high);
 	}
 }
 
@@ -73,18 +75,9 @@ void qk_sort(int *array, size_t size, size_t low, size_t high)
  * quick_sort - use the quick sort algorithm to sort an int array
  * @array: pointer to the array
  * @size: of the array
- * Return: the endless void
  */
 
 void quick_sort(int *array, size_t size)
 {
-	size_t low, high;
-
-	if (!array || size < 2)
-		return;
-
-	low = 0;
-	high = size - 1;
-
-	qk_sort(array, size, low, high);
+	quick_sort_actual(array, size, 0, size - 1);
 }
